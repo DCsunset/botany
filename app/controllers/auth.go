@@ -167,113 +167,51 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "{\"err\": []}")
 }
 
-type TokenResp struct {
-	Id string
-}
-
-type UserResp struct {
-	Username string
-}
-
 // curl http://localhost:3434/login -i -d "handle=abc&password=qwq"
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-	t := r.PostFormValue("token")
 	s := r.PostFormValue("handle")
 	p := r.PostFormValue("password")
 
-	if len(t) > 0 {
-		reqBody, _ := json.Marshal(map[string]string{"token": t})
+	// TODO: Support logging in with e-mail
+	u := models.User{}
+	u.Handle = s
 
-		resp, err := http.Post(
-			"https://api.eesast.com/v1/users/token/validate",
-			"application/json",
-			bytes.NewBuffer(reqBody),
-		)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		fmt.Println(resp.StatusCode)
-		w.WriteHeader(resp.StatusCode)
-		if resp.StatusCode != 200 {
-			fmt.Fprintf(w, "{}")
-			return
-		}
+	ok := true
 
-		decoder := json.NewDecoder(resp.Body)
-		var tr TokenResp
-		err = decoder.Decode(&tr)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-
-		resp, err = http.Get(
-			fmt.Sprintf("https://api.eesast.com/v1/users/username/%s", tr.Id),
-		)
-		if resp.StatusCode != 200 {
-			fmt.Fprintf(w, "{}")
-			return
-		}
-		decoder = json.NewDecoder(resp.Body)
-		var ur UserResp
-		err = decoder.Decode(&ur)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-
-		u := models.User{}
-		u.Handle = tr.Id
-		u.Nickname = ur.Username
-
-		if err := u.Create(); err != nil {
+	if err := u.ReadByHandle(); err != nil {
+		if err == sql.ErrNoRows {
+			ok = false
+		} else {
 			panic(err)
 		}
+	}
 
-		fmt.Fprintf(w, "{ \"id\": \"%s\" }", tr.Id)
-	} else {
-		// TODO: Support logging in with e-mail
-		u := models.User{}
-		u.Handle = s
+	if ok && !u.VerifyPassword(p) {
+		ok = false
+	}
 
-		ok := true
-
-		if err := u.ReadByHandle(); err != nil {
-			if err == sql.ErrNoRows {
-				ok = false
-			} else {
+	if !ok {
+		u = models.User{}
+		u.Email = s
+		if err := u.ReadByEmail(); err != nil {
+			if err != sql.ErrNoRows {
 				panic(err)
 			}
 		}
-
-		if ok && !u.VerifyPassword(p) {
-			ok = false
+		if u.VerifyPassword(p) {
+			ok = true
 		}
+	}
 
-		if !ok {
-			u = models.User{}
-			u.Email = s
-			if err := u.ReadByEmail(); err != nil {
-				if err != sql.ErrNoRows {
-					panic(err)
-				}
-			}
-			if u.VerifyPassword(p) {
-				ok = true
-			}
-		}
-
-		if ok {
-			middlewareAuthGrant(w, r, u.Id)
-			w.WriteHeader(200)
-			enc := json.NewEncoder(w)
-			enc.SetEscapeHTML(false)
-			enc.Encode(u.Representation())
-		} else {
-			w.WriteHeader(400)
-			fmt.Fprintf(w, "{}")
-		}
+	if ok {
+		middlewareAuthGrant(w, r, u.Id)
+		w.WriteHeader(200)
+		enc := json.NewEncoder(w)
+		enc.SetEscapeHTML(false)
+		enc.Encode(u.Representation())
+	} else {
+		w.WriteHeader(400)
+		fmt.Fprintf(w, "{}")
 	}
 }
 
@@ -529,7 +467,7 @@ func userSearchHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func init() {
-	//registerRouterFunc("/signup", signupHandler, "POST")
+	registerRouterFunc("/signup", signupHandler, "POST")
 	registerRouterFunc("/login", loginHandler, "POST")
 	registerRouterFunc("/logout", logoutHandler, "POST")
 	registerRouterFunc("/whoami", whoAmIHandler, "GET")
