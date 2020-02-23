@@ -182,7 +182,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	p := r.PostFormValue("password")
 
 	if len(t) > 0 {
-		reqBody, _ := json.Marshal(map[string]string { "token": t })
+		reqBody, _ := json.Marshal(map[string]string{"token": t})
 
 		resp, err := http.Post(
 			"https://api.eesast.com/v1/users/token/validate",
