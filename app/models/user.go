@@ -38,12 +38,12 @@ func init() {
 	registerSchema("users",
 		"id SERIAL PRIMARY KEY",
 		"handle TEXT NOT NULL",
-		"email TEXT NOT NULL",
-		"password TEXT NOT NULL",
-		"privilege SMALLINT NOT NULL DEFAULT "+strconv.Itoa(UserPrivilegeNormal),
+		"email TEXT",
+		"password TEXT",
+		"privilege SMALLINT DEFAULT "+strconv.Itoa(UserPrivilegeNormal),
 		"joined_at BIGINT NOT NULL",
-		"nickname TEXT NOT NULL",
-		"bio TEXT NOT NULL DEFAULT ''",
+		"nickname TEXT",
+		"bio TEXT DEFAULT ''",
 		"avatar INTEGER", // Nullable
 		"ADD CONSTRAINT fk_avatar FOREIGN KEY (avatar) REFERENCES file (id)",
 	)
