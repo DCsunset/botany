@@ -532,7 +532,7 @@ func userSearchHandler(w http.ResponseWriter, r *http.Request) {
 
 func init() {
 	registerRouterFunc("/token", tokenHandler, "POST")
-	registerRouterFunc("/signup", signupHandler, "POST")
+	//registerRouterFunc("/signup", signupHandler, "POST")
 	registerRouterFunc("/login", loginHandler, "POST")
 	registerRouterFunc("/logout", logoutHandler, "POST")
 	registerRouterFunc("/whoami", whoAmIHandler, "GET")
