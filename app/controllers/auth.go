@@ -225,6 +225,7 @@ func tokenHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
+	middlewareAuthGrant(w, r, u.Id)
 	w.WriteHeader(200)
 	enc := json.NewEncoder(w)
 	enc.SetEscapeHTML(false)
