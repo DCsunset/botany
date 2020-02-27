@@ -8,6 +8,7 @@ import ElementUI from 'element-ui'
 import axios from 'axios'
 import qs from 'querystring'
 import utils from './utils'
+import vuetify from '@/plugins/vuetify'
 import 'element-ui/lib/theme-chalk/index.css'
 
 Vue.config.productionTip = false
@@ -90,6 +91,7 @@ window.onbeforeunload = function () {
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  vuetify,
   router,
   store,
   components: { App },
