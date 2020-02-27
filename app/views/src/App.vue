@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <v-app>
     <div id="topbar-background">
       <div id="navbar-container" align="left">
         <div id="navbar-banner">
@@ -88,7 +88,7 @@
         <p>BotAny是开源项目，仓库地址：<a href="https://github.com/kawa-yoiko/botany" style="color: whitesmoke; text-decoration: none">github.com/kawa-yoiko/botany</a></p>
       </div>
     </div>
-  </div>
+  </v-app>
 </template>
 
 <script>

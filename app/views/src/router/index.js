@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 const login = () => import('@/components/login')
+const token = () => import('@/components/token')
 const signup = () => import('@/components/signup')
 const contestlist = () => import('@/components/contestlist')
 const contestmain = () => import('@/components/contestmain')
@@ -28,6 +29,17 @@ Router.prototype.push = function push (location, onResolve, onReject) {
 
 export default new Router({
   routes: [
+    {
+      path: '/token',
+      name: 'token',
+      component: token,
+      meta: {
+        title: '登录',
+        navbarType: 'none',
+        prePage: [],
+        stalling: false
+      }
+    },
     {
       path: '/login',
       name: 'login',

@@ -12,71 +12,11 @@
             <div class="login-header">登录BotAny</div>
           </div>
           <div class="login-main">
-            <el-form
-              ref="loginform"
-              :model="loginInfo"
-              label-position="right"
-              label-width="100px"
-              hide-required-asterisk
-              :rules="rules"
-            >
-              <el-row>
-                <el-form-item prop="handle" :error="loginErrHandle" label="用户名：">
-                  <el-input
-                    type="text"
-                    v-model="loginInfo.handle"
-                    placeholder="请输入账号"
-                    auto-complete="off"
-                    prefix-icon="el-icon-user-solid"
-                  ></el-input>
-                </el-form-item>
-              </el-row>
-
-              <el-row>
-                <el-form-item prop="password" :error="loginErrPswd" label="密码：">
-                  <el-input
-                    type="password"
-                    v-model="loginInfo.password"
-                    placeholder="请输入密码"
-                    auto-complete="off"
-                    prefix-icon="el-icon-lock"
-                  ></el-input>
-                </el-form-item>
-              </el-row>
-
-              <!-- <el-row>
-                <el-col :span="5">
-                  <div align="right" class="login-title">验证码：</div>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item prop="captcha" :error="loginErrCpch">
-                  <el-input
-                    type="text"
-                    v-model="loginInfo.captcha"
-                    placeholder="请输入验证码"
-                    auto-complete="off"
-                    prefix-icon="el-icon-s-claim"
-                  ></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="7">
-                  <img :src="captcha64" style="width:100%; margin-top: -10px">
-                </el-col>
-              </el-row>-->
-            </el-form>
-
-            <el-row>
-              <el-col :span="12">
-                <el-button type="primary" @click="login" style="width: 80%">登录</el-button>
-              </el-col>
-              <el-col :span="12">
-                <el-button @click="goSignup" style="width: 80%">注册</el-button>
-              </el-col>
-            </el-row>
-            <!--<el-row>
-              <el-button type="text">忘记密码？</el-button>
-            </el-row>-->
+            请从THU AI主网站登录本赛道
           </div>
+          <el-button style="width: 60%; margin-top: 40px" @click="goToMain">
+            前往主网站
+          </el-button>
         </el-card>
       </el-col>
     </el-row>
@@ -189,6 +129,9 @@ export default {
           redirect: this.redirect
         }
       })
+    },
+    goToMain () {
+      window.location = 'https://thu-ai.net'
     }
   }
 }
